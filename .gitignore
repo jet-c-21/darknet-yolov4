@@ -1,3 +1,8 @@
+# Customerization
+## Folders
+.idea
+.virtual_documents
+
 *.o
 *.a
 *.dSYM
