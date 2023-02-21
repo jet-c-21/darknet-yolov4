@@ -238,6 +238,8 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
     return sorted(predictions, key=lambda x: x[1])
 
 
+lib = None
+
 if os.name == "posix":
     so_lib_path = pathlib.Path(__file__).parent / 'libdarknet.so'
     assert so_lib_path.exists()
