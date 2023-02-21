@@ -56,11 +56,11 @@ class METADATA(Structure):
                 ("names", POINTER(c_char_p))]
 
 
-def network_width(net):
+def network_width(net) -> int:
     return lib.network_width(net)
 
 
-def network_height(net):
+def network_height(net) -> int:
     return lib.network_height(net)
 
 
