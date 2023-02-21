@@ -2,6 +2,7 @@
 ## Folders
 .idea
 .virtual_documents
+.vscode
 
 *.o
 *.a

@@ -12,6 +12,8 @@ from ctypes import *
 import math
 import random
 import os
+import numpy as np
+import pathlib
 
 
 class BOX(Structure):
@@ -35,6 +37,7 @@ class DETECTION(Structure):
                 ("embedding_size", c_int),
                 ("sim", c_float),
                 ("track_id", c_int)]
+
 
 class DETNUMPAIR(Structure):
     _fields_ = [("num", c_int),
@@ -111,7 +114,9 @@ def print_detections(detections, coordinates=False):
     for label, confidence, bbox in detections:
         x, y, w, h = bbox
         if coordinates:
-            print("{}: {}%    (left_x: {:.0f}   top_y:  {:.0f}   width:   {:.0f}   height:  {:.0f})".format(label, confidence, x, y, w, h))
+            print("{}: {}%    (left_x: {:.0f}   top_y:  {:.0f}   width:   {:.0f}   height:  {:.0f})".format(label,
+                                                                                                            confidence,
+                                                                                                            x, y, w, h))
         else:
             print("{}: {}%".format(label, confidence))
 
@@ -133,6 +138,7 @@ def decode_detection(detections):
         confidence = str(round(confidence * 100, 2))
         decoded.append((str(label), confidence, bbox))
     return decoded
+
 
 # https://www.pyimagesearch.com/2015/02/16/faster-non-maximum-suppression-python/
 # Malisiewicz et al.
@@ -185,6 +191,7 @@ def non_max_suppression_fast(detections, overlap_thresh):
         # integer data type
     return [detections[i] for i in pick]
 
+
 def remove_negatives(detections, class_names, num):
     """
     Remove all classes with 0% confidence within the detection
@@ -232,8 +239,11 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
 
 
 if os.name == "posix":
+    so_lib_path = pathlib.Path(__file__).parent / 'libdarknet.so'
+    assert so_lib_path.exists()
     cwd = os.path.dirname(__file__)
     lib = CDLL(cwd + "/libdarknet.so", RTLD_GLOBAL)
+    # lib = CDLL(so_lib_path, RTLD_GLOBAL)
 elif os.name == "nt":
     cwd = os.path.dirname(__file__)
     os.environ['PATH'] = cwd + ';' + os.environ['PATH']
@@ -248,7 +258,7 @@ lib.network_height.argtypes = [c_void_p]
 lib.network_height.restype = c_int
 
 copy_image_from_bytes = lib.copy_image_from_bytes
-copy_image_from_bytes.argtypes = [IMAGE,c_char_p]
+copy_image_from_bytes.argtypes = [IMAGE, c_char_p]
 
 predict = lib.network_predict_ptr
 predict.argtypes = [c_void_p, POINTER(c_float)]
@@ -330,5 +340,5 @@ predict_image_letterbox.restype = POINTER(c_float)
 
 network_predict_batch = lib.network_predict_batch
 network_predict_batch.argtypes = [c_void_p, IMAGE, c_int, c_int, c_int,
-                                   c_float, c_float, POINTER(c_int), c_int, c_int]
+                                  c_float, c_float, POINTER(c_int), c_int, c_int]
 network_predict_batch.restype = POINTER(DETNUMPAIR)

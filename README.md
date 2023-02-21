@@ -1,3 +1,11 @@
+# Quick Start
+```shell
+gh repo clone jet-c-21/darknet-yolov4
+```
+```shell
+wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights
+```
+
 # Yolo v4, v3 and v2 for Windows and Linux
 
 ## (neural networks for object detection)
