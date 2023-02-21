@@ -1,3 +1,6 @@
 *
 
 # >>> whitelist >>>
+!README.md
+!Makefile
+!darknet.py
