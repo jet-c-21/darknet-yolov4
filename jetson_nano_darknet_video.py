@@ -27,6 +27,8 @@ def parser():
                         help="path to data file")
     parser.add_argument("--thresh", type=float, default=.25,
                         help="remove detections with confidence below this value")
+    parser.add_argument('--cam_w', type=int, default=640)
+    parser.add_argument('--cam_h', type=int, default=480)
     return parser.parse_args()
 
 
@@ -181,8 +183,14 @@ if __name__ == '__main__':
     darknet_height = darknet.network_height(network)
     input_path = str2int(args.input)
     cap = cv2.VideoCapture(input_path)
-    video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.cam_w)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.cam_h)
+
+    video_width = args.cam_w
+    video_height = args.cam_h
+    
+    # video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    # video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     print(f"Video Capture Info: src = {input_path}, w = {video_width}, h = {video_height}")
 
