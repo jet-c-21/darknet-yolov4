@@ -7,6 +7,8 @@ import darknet
 import argparse
 from threading import Thread, enumerate
 from queue import Queue
+from pprint import pprint as pp
+from typing import Tuple
 
 
 def parser():
@@ -107,6 +109,10 @@ def convert4cropping(image, bbox):
     return bbox_cropping
 
 
+def get_darknet_shape(darknet_img: darknet.IMAGE) -> Tuple[int, int, int]:
+    return (darknet_img.h, darknet_img.w, darknet_img.c)
+
+
 def video_capture(frame_queue, darknet_image_queue):
     print('video_capture start ...')
     while cap.isOpened():
@@ -121,13 +127,14 @@ def video_capture(frame_queue, darknet_image_queue):
         frame_queue.put(frame)
 
         img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
-        print(img_for_detect.size)
 
         cv2.imshow('Preview', frame_resized)
-        if cv2.waitKey(1) == ord('q'):
-            break
+        input_key = cv2.waitKey(0)
+        # if input_key == ord('q'):
+        #     break
 
-        input()
+        # if cv2.waitKey(1) == ord('q'):
+        #     break
 
         # darknet.copy_image_from_bytes(img_for_detect, frame_resized.tobytes())
         # darknet_image_queue.put(img_for_detect)
