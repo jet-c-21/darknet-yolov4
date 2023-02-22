@@ -120,11 +120,12 @@ def video_capture(frame_queue, darknet_image_queue):
 
         frame_queue.put(frame)
 
+        img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
+
         cv2.imshow('Preview', frame_resized)
         if cv2.waitKey(1) == ord('q'):
             break
 
-        # img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
         # darknet.copy_image_from_bytes(img_for_detect, frame_resized.tobytes())
         # darknet_image_queue.put(img_for_detect)
 
