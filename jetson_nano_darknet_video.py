@@ -15,7 +15,7 @@ def parser():
     parser = argparse.ArgumentParser(description="YOLO Object Detection")
     parser.add_argument("--input", type=str, default=0,
                         help="video source. If empty, uses webcam 0 stream")
-    parser.add_argument("--out_filename", type=str, default="jetson_nano_infer.avi",
+    parser.add_argument("--out_filename", type=str, default='',
                         help="inference video name. Not saved if empty")
     parser.add_argument("--weights", default="yolov4.weights",
                         help="yolo weights path")
@@ -205,6 +205,8 @@ if __name__ == '__main__':
         args.weights,
         batch_size=1
     )
+
+    # args.out_filename = 'jetson_nano_infer.avi'
 
     os.system('clear')
 
