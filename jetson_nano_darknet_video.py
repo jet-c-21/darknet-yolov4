@@ -121,6 +121,7 @@ def video_capture(frame_queue, darknet_image_queue):
         frame_queue.put(frame)
 
         img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
+        print(img_for_detect.size)
 
         cv2.imshow('Preview', frame_resized)
         if cv2.waitKey(1) == ord('q'):
@@ -184,6 +185,9 @@ if __name__ == '__main__':
         args.weights,
         batch_size=1
     )
+
+    os.system('clear')
+
     darknet_width = darknet.network_width(network)
     darknet_height = darknet.network_height(network)
     input_path = str2int(args.input)
