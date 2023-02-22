@@ -125,19 +125,20 @@ def video_capture(frame_queue, darknet_image_queue):
                                    interpolation=cv2.INTER_LINEAR)
 
         frame_queue.put(frame)
-
         img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
+        darknet.copy_image_from_bytes(img_for_detect, frame_resized.tobytes())
+        # darknet_image_queue.put(img_for_detect)
 
         cv2.imshow('Preview', frame_resized)
         input_key = cv2.waitKey(0)
+
         # if input_key == ord('q'):
         #     break
 
         # if cv2.waitKey(1) == ord('q'):
         #     break
 
-        # darknet.copy_image_from_bytes(img_for_detect, frame_resized.tobytes())
-        # darknet_image_queue.put(img_for_detect)
+
 
     cap.release()
 
