@@ -114,13 +114,17 @@ def video_capture(frame_queue, darknet_image_queue):
         if not ret:
             break
 
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame_resized = cv2.resize(frame_rgb, (darknet_width, darknet_height),
-                                   interpolation=cv2.INTER_LINEAR)
-        frame_queue.put(frame)
-        img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
-        darknet.copy_image_from_bytes(img_for_detect, frame_resized.tobytes())
-        darknet_image_queue.put(img_for_detect)
+        cv2.imshow('Preview', frame)
+        if cv2.waitKey(1) == ord('q'):
+            break
+
+        # frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # frame_resized = cv2.resize(frame_rgb, (darknet_width, darknet_height),
+        #                            interpolation=cv2.INTER_LINEAR)
+        # frame_queue.put(frame)
+        # img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
+        # darknet.copy_image_from_bytes(img_for_detect, frame_resized.tobytes())
+        # darknet_image_queue.put(img_for_detect)
 
     cap.release()
 
@@ -193,5 +197,5 @@ if __name__ == '__main__':
     print(f"Video Capture Info: src = {input_path}, w = {video_width}, h = {video_height}")
 
     Thread(target=video_capture, args=(frame_queue, darknet_image_queue)).start()
-    Thread(target=inference, args=(darknet_image_queue, detections_queue, fps_queue)).start()
-    Thread(target=drawing, args=(frame_queue, detections_queue, fps_queue)).start()
+    # Thread(target=inference, args=(darknet_image_queue, detections_queue, fps_queue)).start()
+    # Thread(target=drawing, args=(frame_queue, detections_queue, fps_queue)).start()
