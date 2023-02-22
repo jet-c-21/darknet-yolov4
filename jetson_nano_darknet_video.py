@@ -127,18 +127,15 @@ def video_capture(frame_queue, darknet_image_queue):
         frame_queue.put(frame)
         img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
         darknet.copy_image_from_bytes(img_for_detect, frame_resized.tobytes())
-        # darknet_image_queue.put(img_for_detect)
+        darknet_image_queue.put(img_for_detect)
 
-        cv2.imshow('Preview', frame_resized)
-        input_key = cv2.waitKey(0)
-
+        # help to view captured image
+        # cv2.imshow('Preview', frame_resized)
+        # input_key = cv2.waitKey(0)
         # if input_key == ord('q'):
         #     break
-
         # if cv2.waitKey(1) == ord('q'):
         #     break
-
-
 
     cap.release()
 
@@ -148,12 +145,17 @@ def inference(darknet_image_queue, detections_queue, fps_queue):
         darknet_image = darknet_image_queue.get()
         prev_time = time.time()
         detections = darknet.detect_image(network, class_names, darknet_image, thresh=args.thresh)
-        detections_queue.put(detections)
-        fps = int(1 / (time.time() - prev_time))
-        fps_queue.put(fps)
-        print("FPS: {}".format(fps))
-        darknet.print_detections(detections, args.ext_output)
-        darknet.free_image(darknet_image)
+
+        print(detections)
+        input('^ last detection')
+
+        # detections_queue.put(detections)
+        # fps = int(1 / (time.time() - prev_time))
+        # fps_queue.put(fps)
+        # print("FPS: {}".format(fps))
+        # darknet.print_detections(detections, args.ext_output)
+        # darknet.free_image(darknet_image)
+
     cap.release()
 
 
@@ -214,5 +216,5 @@ if __name__ == '__main__':
     print(f"Video Capture Info: src = {input_path}, w = {video_width}, h = {video_height}")
 
     Thread(target=video_capture, args=(frame_queue, darknet_image_queue)).start()
-    # Thread(target=inference, args=(darknet_image_queue, detections_queue, fps_queue)).start()
+    Thread(target=inference, args=(darknet_image_queue, detections_queue, fps_queue)).start()
     # Thread(target=drawing, args=(frame_queue, detections_queue, fps_queue)).start()
