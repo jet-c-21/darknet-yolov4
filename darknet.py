@@ -224,7 +224,7 @@ def remove_negatives_faster(detections, class_names, num):
     return predictions
 
 
-def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45) -> List[Tuple, ...]:
+def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45) -> List[Tuple]:
     """
         Returns a list with highest confidence class and their bbox
     """
