@@ -182,7 +182,8 @@ def drawing(frame_queue, detections_queue, fps_queue):
         if args.out_filename is not None:
             video.write(image)
 
-        if cv2.waitKey(fps) == 27:
+        delay = int(fps)
+        if cv2.waitKey(1 if delay == 0 else delay) == 27:
             break
 
     cap.release()
