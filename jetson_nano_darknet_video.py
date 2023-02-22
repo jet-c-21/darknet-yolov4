@@ -15,7 +15,7 @@ def parser():
     parser = argparse.ArgumentParser(description="YOLO Object Detection")
     parser.add_argument("--input", type=str, default=0,
                         help="video source. If empty, uses webcam 0 stream")
-    parser.add_argument("--out_filename", type=str, default="",
+    parser.add_argument("--out_filename", type=str, default="jetson_nano_infer.avi",
                         help="inference video name. Not saved if empty")
     parser.add_argument("--weights", default="yolov4.weights",
                         help="yolo weights path")
@@ -149,6 +149,7 @@ def inference(darknet_image_queue, detections_queue, fps_queue):
         fps = int(1 / (time.time() - prev_time))
         fps_queue.put(fps)
         print("FPS: {}".format(fps))
+
         darknet.print_detections(detections, args.ext_output)
         darknet.free_image(darknet_image)
 
@@ -158,22 +159,31 @@ def inference(darknet_image_queue, detections_queue, fps_queue):
 def drawing(frame_queue, detections_queue, fps_queue):
     random.seed(3)  # deterministic bbox colors
     video = set_saved_video(cap, args.out_filename, (video_width, video_height))
+
     while cap.isOpened():
         frame = frame_queue.get()
+        if frame is None:
+            continue
+
         detections = detections_queue.get()
         fps = fps_queue.get()
-        detections_adjusted = []
-        if frame is not None:
-            for label, confidence, bbox in detections:
-                bbox_adjusted = convert2original(frame, bbox)
-                detections_adjusted.append((str(label), confidence, bbox_adjusted))
-            image = darknet.draw_boxes(detections_adjusted, frame, class_colors)
-            if not args.dont_show:
-                cv2.imshow('Inference', image)
-            if args.out_filename is not None:
-                video.write(image)
-            if cv2.waitKey(fps) == 27:
-                break
+        detections_adjusted = list()
+
+        for label, confidence, bbox in detections:
+            bbox_adjusted = convert2original(frame, bbox)
+            detections_adjusted.append((str(label), confidence, bbox_adjusted))
+
+        image = darknet.draw_boxes(detections_adjusted, frame, class_colors)
+
+        if not args.dont_show:
+            cv2.imshow('Inference', image)
+
+        if args.out_filename is not None:
+            video.write(image)
+
+        if cv2.waitKey(fps) == 27:
+            break
+
     cap.release()
     video.release()
     cv2.destroyAllWindows()
@@ -213,4 +223,4 @@ if __name__ == '__main__':
 
     Thread(target=video_capture, args=(frame_queue, darknet_image_queue)).start()
     Thread(target=inference, args=(darknet_image_queue, detections_queue, fps_queue)).start()
-    # Thread(target=drawing, args=(frame_queue, detections_queue, fps_queue)).start()
+    Thread(target=drawing, args=(frame_queue, detections_queue, fps_queue)).start()
