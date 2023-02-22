@@ -108,6 +108,7 @@ def convert4cropping(image, bbox):
 
 
 def video_capture(frame_queue, darknet_image_queue):
+    print('video_capture start ...')
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -188,11 +189,14 @@ if __name__ == '__main__':
 
     video_width = args.cam_w
     video_height = args.cam_h
-    
+
     # video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     # video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     print(f"Video Capture Info: src = {input_path}, w = {video_width}, h = {video_height}")
+
+    time.sleep(3)
+
 
     Thread(target=video_capture, args=(frame_queue, darknet_image_queue)).start()
     # Thread(target=inference, args=(darknet_image_queue, detections_queue, fps_queue)).start()
