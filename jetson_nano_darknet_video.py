@@ -114,9 +114,6 @@ def video_capture(frame_queue, darknet_image_queue):
         if not ret:
             break
 
-        cv2.imshow('Video Capture', frame)
-        intput_key = cv2.waitKey(0)
-
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame_resized = cv2.resize(frame_rgb, (darknet_width, darknet_height),
                                    interpolation=cv2.INTER_LINEAR)
@@ -195,9 +192,6 @@ if __name__ == '__main__':
 
     print(f"Video Capture Info: src = {input_path}, w = {video_width}, h = {video_height}")
 
-    time.sleep(3)
-
-
     Thread(target=video_capture, args=(frame_queue, darknet_image_queue)).start()
-    # Thread(target=inference, args=(darknet_image_queue, detections_queue, fps_queue)).start()
-    # Thread(target=drawing, args=(frame_queue, detections_queue, fps_queue)).start()
+    Thread(target=inference, args=(darknet_image_queue, detections_queue, fps_queue)).start()
+    Thread(target=drawing, args=(frame_queue, detections_queue, fps_queue)).start()
