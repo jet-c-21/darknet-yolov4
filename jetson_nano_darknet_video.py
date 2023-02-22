@@ -111,6 +111,9 @@ def video_capture(frame_queue, darknet_image_queue):
         if not ret:
             break
 
+        cv2.imshow('Video Capture', frame)
+        intput_key = cv2.waitKey(0)
+
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame_resized = cv2.resize(frame_rgb, (darknet_width, darknet_height),
                                    interpolation=cv2.INTER_LINEAR)
@@ -118,9 +121,6 @@ def video_capture(frame_queue, darknet_image_queue):
         img_for_detect = darknet.make_image(darknet_width, darknet_height, 3)
         darknet.copy_image_from_bytes(img_for_detect, frame_resized.tobytes())
         darknet_image_queue.put(img_for_detect)
-
-        cv2.imshow('Video Capture', frame)
-        intput_key = cv2.waitKey(0)
 
     cap.release()
 
