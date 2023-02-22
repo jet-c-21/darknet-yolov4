@@ -145,16 +145,12 @@ def inference(darknet_image_queue, detections_queue, fps_queue):
         darknet_image = darknet_image_queue.get()
         prev_time = time.time()
         detections = darknet.detect_image(network, class_names, darknet_image, thresh=args.thresh)
-
-        print(detections)
-        input('^ last detection')
-
-        # detections_queue.put(detections)
-        # fps = int(1 / (time.time() - prev_time))
-        # fps_queue.put(fps)
-        # print("FPS: {}".format(fps))
-        # darknet.print_detections(detections, args.ext_output)
-        # darknet.free_image(darknet_image)
+        detections_queue.put(detections)
+        fps = int(1 / (time.time() - prev_time))
+        fps_queue.put(fps)
+        print("FPS: {}".format(fps))
+        darknet.print_detections(detections, args.ext_output)
+        darknet.free_image(darknet_image)
 
     cap.release()
 

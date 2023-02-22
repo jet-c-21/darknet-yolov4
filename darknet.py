@@ -14,6 +14,7 @@ import random
 import os
 import numpy as np
 import pathlib
+from typing import List, Tuple
 
 
 class BOX(Structure):
@@ -110,6 +111,8 @@ def load_network(config_file, data_file, weights, batch_size=1):
 
 
 def print_detections(detections, coordinates=False):
+    if not detections:
+        return
     print("\nObjects:")
     for label, confidence, bbox in detections:
         x, y, w, h = bbox
@@ -221,7 +224,7 @@ def remove_negatives_faster(detections, class_names, num):
     return predictions
 
 
-def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45):
+def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45) -> List[Tuple, ...]:
     """
         Returns a list with highest confidence class and their bbox
     """
