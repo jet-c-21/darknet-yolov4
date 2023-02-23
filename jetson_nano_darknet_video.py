@@ -18,7 +18,7 @@ print(f"[INFO] - append directory to path: {PROJECT_DIR}")
 sys.path.append(str(PROJECT_DIR))
 
 from bts.ult import view_args
-from bts.ult.img_tool import add_text_in_img
+from bts.ult.image_tool import add_text_in_img
 
 
 def parser():
