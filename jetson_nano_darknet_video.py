@@ -18,7 +18,7 @@ print(f"[INFO] - append directory to path: {PROJECT_DIR}")
 sys.path.append(str(PROJECT_DIR))
 
 from bts.ult import view_args
-from bts.ult.image_tool import add_text_in_img
+from bts.ult.image_tool import add_text_in_image
 
 
 def parser():
@@ -188,7 +188,7 @@ def drawing(frame_queue, detections_queue, fps_queue):
 
         image = darknet.draw_boxes(detections_adjusted, frame, class_colors)
 
-        add_text_in_img(image, f"FPS : {fps:.1f}", (15, 30), color='green')
+        add_text_in_image(image, f"FPS : {fps:.1f}", (15, 30), color='green')
 
         if not args.dont_show:
             cv2.imshow('Inference', image)
