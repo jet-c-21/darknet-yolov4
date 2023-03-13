@@ -125,7 +125,7 @@ def print_detections(detections, coordinates=False):
             print("{}: {}%".format(label, confidence))
 
 
-def draw_boxes(detections, image, colors, thickness=3):
+def draw_boxes(detections, image, colors, thickness=1):
     import cv2
     for label, confidence, bbox in detections:
         left, top, right, bottom = bbox2points(bbox)
