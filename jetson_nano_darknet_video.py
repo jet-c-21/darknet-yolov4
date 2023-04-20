@@ -17,8 +17,8 @@ PROJECT_DIR = curr_file_path.parent.parent
 print(f"[INFO] - append directory to path: {PROJECT_DIR}")
 sys.path.append(str(PROJECT_DIR))
 
-from bts.ult import view_args
-from bts.ult.image_tool import add_text_in_image
+from ai_bird_repeller.ult import view_args
+from ai_bird_repeller.ult.image_tool import add_text_in_image
 
 
 def parser():
